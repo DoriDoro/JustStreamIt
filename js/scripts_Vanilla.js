@@ -17,6 +17,26 @@ async function getBestMovie(url) {
     let imdb_score = movieDetails.imdb_score;
     let description = movieDetails.long_description;
 
+    const content = `
+      <div>
+        <h2> The Best Movie </h2>
+        <div class="container">
+          <img src=${imageUrl} alt=${title}>
+          <div class="content">
+            <h3> ${title} (${imdb_score}/10)</h3>
+            <p> ${description}</p>
+          </div>
+        </div>
+        <div id="button">
+          <button class="button">Show Details</button>
+        </div>
+      </div>
+    `
+
+    let section = document.getElementById("the-best");
+    section.innerHTML = content;
+
+    /*
     let imgElement = document.createElement("img");
     imgElement.src = imageUrl;
     imgElement.alt = title;
@@ -31,6 +51,7 @@ async function getBestMovie(url) {
     let textDescription = description;
     descriptionElement.textContent = textDescription;
     document.getElementById("the-best").appendChild(descriptionElement);
+    */
 
   } catch (error) {
     console.error(error);

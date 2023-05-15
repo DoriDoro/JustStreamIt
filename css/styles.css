@@ -71,18 +71,28 @@ body
     margin: 0 20px 0 0;
 }
 
+.container {
+    display: flex;
+}
+
 .content {
-    text-align: left;
+    display: flex;
+    flex-direction: column;
 }
 
-#the-best-button {
-    text-align: center;
+#button {
+    display: flex;
+    justify-content: center;
 }
 
-#the-best-button button {
+.button {
     border-color: rgb(95, 158, 160);
     border-radius: 3px;
-    background-color: rgb(95,158,160);
+    background-color: rgb(220,233,234);
+    font-size: large;
+    font-weight: bold;
+    margin-top: -50px;
+    padding: 10px 40px;
     text-align: center;
 }
 
