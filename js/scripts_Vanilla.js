@@ -1,28 +1,41 @@
-var home_url = "http://localhost:8000/api/v1/titles/"
-var bestMovie = "http://localhost:8000/api/v1/titles/?year=&min_year=&max_year=&imdb_score=&imdb_score_min=&imdb_score_max=&title=&title_contains=&genre=&genre_contains=&sort_by=-imdb_score&director=&director_contains=&writer=&writer_contains=&actor=&actor_contains=&country=&country_contains=&lang=&lang_contains=&company=&company_contains=&rating=&rating_contains="
+const homeUrl = "http://localhost:8000/api/v1/titles/"
+const bestMovie = "http://localhost:8000/api/v1/titles/?year=&min_year=&max_year=&imdb_score=&imdb_score_min=&imdb_score_max=&title=&title_contains=&genre=&genre_contains=&sort_by=-imdb_score&director=&director_contains=&writer=&writer_contains=&actor=&actor_contains=&country=&country_contains=&lang=&lang_contains=&company=&company_contains=&rating=&rating_contains="
 
-async function logJSONData(url) {
+async function getBestMovie(url) {
   try {
     const response = await fetch(url);
     const jsonData = await response.json();
-    console.log(jsonData);
+
+    const bestMovieId = jsonData.results[0].id;
+    const bestMovieUrl = `http://localhost:8000/api/v1/titles/${bestMovieId}`
+
+    const movieDetailsResponse = await fetch(bestMovieUrl);
+    const movieDetails = await movieDetailsResponse.json();
+
+    let imageUrl = movieDetails.image_url;
+    let title = movieDetails.title;
+    let imdb_score = movieDetails.imdb_score;
+    let description = movieDetails.long_description;
+
+    let imgElement = document.createElement("img");
+    imgElement.src = imageUrl;
+    imgElement.alt = title;
+    document.getElementById("the-best").appendChild(imgElement);
+
+    let titleElement = document.createElement("h3");
+    let textTitle = `${title} (${imdb_score}/10)`;
+    titleElement.textContent = textTitle;
+    document.getElementById("the-best").appendChild(titleElement);
+
+    let descriptionElement = document.createElement("p");
+    let textDescription = description;
+    descriptionElement.textContent = textDescription;
+    document.getElementById("the-best").appendChild(descriptionElement);
+
   } catch (error) {
     console.error(error);
   }
 }
-logJSONData(home_url)
 
-/*
-getResponse(bestMovie, function(response) {
-    var imageUrl = response.results[0].image_url;
-    var imgElement = document.createElement("img");
-    imgElement.src = imageUrl;
-    document.getElementById("the-best").appendChild(imgElement);
+getBestMovie(bestMovie)
 
-    var title = response.results[0].title;
-    var titleElement = document.createElement("h2");
-    var textTitle = document.createTextNode(title)
-    titleElement.appendChild(textTitle);
-    document.getElementById("the-best").appendChild(titleElement);
-});
-*/
