@@ -30,6 +30,7 @@ body
 #navbar a {
     color: #181818;
     font-size: x-large;
+    font-weight: bold;
     text-decoration: none;
 }
 
@@ -58,7 +59,12 @@ body
 
 #dropdown-content a {
     display: block;
-    margin: 10px;
+    font-weight: normal;
+    padding: 10px;
+}
+
+#dropdown-content a:hover {
+    background-color: rgb(95,158,160);
 }
 
 /*  -- movies --  */
@@ -71,11 +77,11 @@ body
     margin: 0 20px 0 0;
 }
 
-.container {
+.movie-container {
     display: flex;
 }
 
-.content {
+.movie-content {
     display: flex;
     flex-direction: column;
 }
@@ -86,14 +92,13 @@ body
 }
 
 .button {
-    border-color: rgb(95, 158, 160);
+    border: solid 1px rgb(95, 158, 160);
     border-radius: 3px;
     background-color: rgb(220,233,234);
     font-size: large;
     font-weight: bold;
     margin-top: -50px;
     padding: 10px 40px;
-    text-align: center;
 }
 
 .border {
@@ -113,3 +118,15 @@ body
     text-align: center;
 }
 
+
+#modal {
+    display: none;
+}
+
+.show#modal {
+    display: block;
+}
+
+.hide {
+    display: none;
+}

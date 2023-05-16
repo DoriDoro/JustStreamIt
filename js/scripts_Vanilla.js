@@ -12,23 +12,40 @@ async function getBestMovie(url) {
     const movieDetailsResponse = await fetch(bestMovieUrl);
     const movieDetails = await movieDetailsResponse.json();
 
-    let imageUrl = movieDetails.image_url;
-    let title = movieDetails.title;
-    let imdb_score = movieDetails.imdb_score;
-    let description = movieDetails.long_description;
-
     const content = `
-      <div>
+      <div id="best-movie">
         <h2> The Best Movie </h2>
-        <div class="container">
-          <img src=${imageUrl} alt=${title}>
-          <div class="content">
-            <h3> ${title} (${imdb_score}/10)</h3>
-            <p> ${description}</p>
+        <div class="movie-container">
+          <img src=${movieDetails.image_url} alt=${movieDetails.title}>
+          <div class="movie-content">
+            <h3> ${movieDetails.title} (${movieDetails.imdb_score}/10)</h3>
+            <p> ${movieDetails.description}</p>
           </div>
         </div>
         <div id="button">
-          <button class="button">Show Details</button>
+          <button id="open-modal" class="button"> Show Details </button>
+        </div>
+      </div>
+
+      <div id="modal">
+         <h2> The Best Movie </h2>
+        <div class="movie-container">
+          <img src=${movieDetails.image_url} alt=${movieDetails.title}>
+          <div class="movie-content">
+            <h3> ${movieDetails.title} (${movieDetails.imdb_score}/10) </h3>
+            <p> ${movieDetails.genres} </p>
+            <p> ${movieDetails.date_published} </p>
+            <p> ${movieDetails.avg_vote} </p>
+            <p> ${movieDetails.directors} </p>
+            <p> ${movieDetails.actors} </p>
+            <p> ${movieDetails.duration} </p>
+            <p> ${movieDetails.countries} </p>
+            <p> ${movieDetails.budget} </p>
+            <p> ${movieDetails.long_description} </p>
+          </div>
+        </div>
+        <div id="button">
+          <button id="close-modal" class="button"> Close </button>
         </div>
       </div>
     `
@@ -36,22 +53,21 @@ async function getBestMovie(url) {
     let section = document.getElementById("the-best");
     section.innerHTML = content;
 
-    /*
-    let imgElement = document.createElement("img");
-    imgElement.src = imageUrl;
-    imgElement.alt = title;
-    document.getElementById("the-best").appendChild(imgElement);
+    const bestMovie = document.getElementById("best-movie");
+    const openModal = document.getElementById("open-modal");
+    const modal = document.getElementById("modal");
+    const closeModal = document.getElementById("close-modal");
 
-    let titleElement = document.createElement("h3");
-    let textTitle = `${title} (${imdb_score}/10)`;
-    titleElement.textContent = textTitle;
-    document.getElementById("the-best").appendChild(titleElement);
+    openModal.addEventListener("click", function (event) {
+      event.preventDefault();
+      modal.classList.add("show");
+      bestMovie.classList.add("hide");
+    });
 
-    let descriptionElement = document.createElement("p");
-    let textDescription = description;
-    descriptionElement.textContent = textDescription;
-    document.getElementById("the-best").appendChild(descriptionElement);
-    */
+    closeModal.addEventListener("click", function () {
+      modal.classList.remove("show");
+      bestMovie.classList.remove("hide");
+    });
 
   } catch (error) {
     console.error(error);
@@ -60,3 +76,14 @@ async function getBestMovie(url) {
 
 getBestMovie(bestMovie)
 
+
+/*
+      <div id="modal-container">
+        <h2> The Best Movie - Details </h2>
+        <img src=${movieDetails.imageUrl} alt=${movieDetails.title}>
+        <div class="modal-content">
+          <h3> ${movieDetails.title} </h3>
+          <p>
+        </div>
+      </div>  
+      */
