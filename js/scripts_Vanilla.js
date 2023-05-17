@@ -1,5 +1,5 @@
 const homeUrl = "http://localhost:8000/api/v1/titles/"
-const bestMovie = "http://localhost:8000/api/v1/titles/?year=&min_year=&max_year=&imdb_score=&imdb_score_min=&imdb_score_max=&title=&title_contains=&genre=&genre_contains=&sort_by=-imdb_score&director=&director_contains=&writer=&writer_contains=&actor=&actor_contains=&country=&country_contains=&lang=&lang_contains=&company=&company_contains=&rating=&rating_contains="
+const bestMovie = "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score"
 
 async function getBestMovie(url) {
   try {
@@ -23,7 +23,7 @@ async function getBestMovie(url) {
           </div>
         </div>
         <div id="button">
-          <button id="open-modal" class="button"> Show Details </button>
+          <button id="open-modal" class="open-button button"> Show Details </button>
         </div>
       </div>
 
@@ -33,19 +33,43 @@ async function getBestMovie(url) {
           <img src=${movieDetails.image_url} alt=${movieDetails.title}>
           <div class="movie-content">
             <h3> ${movieDetails.title} (${movieDetails.imdb_score}/10) </h3>
-            <p> ${movieDetails.genres} </p>
-            <p> ${movieDetails.date_published} </p>
-            <p> ${movieDetails.avg_vote} </p>
-            <p> ${movieDetails.directors} </p>
-            <p> ${movieDetails.actors} </p>
-            <p> ${movieDetails.duration} </p>
-            <p> ${movieDetails.countries} </p>
-            <p> ${movieDetails.budget} </p>
-            <p> ${movieDetails.long_description} </p>
+            <table>
+              <tr>
+                <th> Genre: </th>
+                <th> Country: </th>
+                <th> Published Date: </th>
+                <th> Vote: </th>
+                <th> Duration: </th>
+                <th> Budget: </th>
+              </tr>
+              <tr>
+                <td> ${movieDetails.genres} </td>
+                <td> ${movieDetails.countries} </td>
+                <td> ${movieDetails.date_published} </td>
+                <td> ${movieDetails.avg_vote} </td>
+                <td> ${movieDetails.duration} </td>
+                <td> ${movieDetails.budget} </td>
+              </tr>
+            </table>
+
+            <table id="second-table">
+              <tr>
+                <th> Director: </th>
+                <td> ${movieDetails.directors} </td>
+              </tr>
+              <tr>
+                <th> Actors: </th>
+                <td> ${movieDetails.actors} </td>
+              </tr>
+              <tr>
+                <th> Description: </th>
+                <td> ${movieDetails.long_description} </td>
+              </tr>
+            </table>
           </div>
         </div>
-        <div id="button">
-          <button id="close-modal" class="button"> Close </button>
+        <div>
+          <button id="close-modal" class="close-button button"> Close </button>
         </div>
       </div>
     `

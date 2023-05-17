@@ -6,7 +6,7 @@ body
 }
 
 #main-body {
-    width: 950px;
+    width: 98%;
     margin: auto;
 }
 
@@ -68,12 +68,8 @@ body
 }
 
 /*  -- movies --  */
-#the-best {
-    display: flex;
-
-}
-
 #the-best img {
+    height: fit-content;
     margin: 0 20px 0 0;
 }
 
@@ -86,9 +82,29 @@ body
     flex-direction: column;
 }
 
+.movie-content tr {
+    text-align: left;
+}
+
+#second-table {
+    padding-top: 20px;
+}
+
+#second-table th, td {
+    padding: 0 0 10px 0;
+}
+
 #button {
     display: flex;
     justify-content: center;
+}
+
+.open-button {
+    margin-top: -50px;
+}
+
+.close-button {
+    margin-top: 10px;
 }
 
 .button {
@@ -97,7 +113,6 @@ body
     background-color: rgb(220,233,234);
     font-size: large;
     font-weight: bold;
-    margin-top: -50px;
     padding: 10px 40px;
 }
 
@@ -118,6 +133,9 @@ body
     text-align: center;
 }
 
+#best-movie {
+    width: 100%;
+}
 
 #modal {
     display: none;
