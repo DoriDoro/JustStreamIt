@@ -1,3 +1,4 @@
+
 body
 {
     background-color: rgb(220,233,234);
@@ -67,31 +68,14 @@ body
     background-color: rgb(95,158,160);
 }
 
-/*  -- movies --  */
+/*  -- best movies --  */
 #the-best img {
     height: fit-content;
     margin: 0 20px 0 0;
 }
 
-.movie-container {
-    display: flex;
-}
-
-.movie-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.movie-content tr {
-    text-align: left;
-}
-
-#second-table {
-    padding-top: 20px;
-}
-
-#second-table th, td {
-    padding: 0 0 10px 0;
+#best-movie {
+    width: 100%;
 }
 
 #button {
@@ -101,10 +85,6 @@ body
 
 .open-button {
     margin-top: -50px;
-}
-
-.close-button {
-    margin-top: 10px;
 }
 
 .button {
@@ -133,18 +113,41 @@ body
     text-align: center;
 }
 
-#best-movie {
-    width: 100%;
+/*  -- modal best movie -- */
+.movie-container {
+    display: flex;
 }
 
-#modal {
+.movie-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.movie-content tr {
+    text-align: left;
+}
+
+th, td {
+    padding: 0 10px 10px 0;
+}
+
+#second-table {
+    padding-top: 20px;
+}
+
+.modal {
+    border: solid 2px grey;
+    border-radius: 5px;
     display: none;
+    margin-left: 15%;
+    margin-top: -375px;
+    overflow: auto;
+    position: fixed;
+    width: min-content;
+    z-index: 9999;
+
 }
 
 .show#modal {
     display: block;
-}
-
-.hide {
-    display: none;
 }

@@ -27,7 +27,7 @@ async function getBestMovie(url) {
         </div>
       </div>
 
-      <div id="modal">
+      <div id="modal" class="modal border">
          <h2> The Best Movie </h2>
         <div class="movie-container">
           <img src=${movieDetails.image_url} alt=${movieDetails.title}>
@@ -77,20 +77,18 @@ async function getBestMovie(url) {
     let section = document.getElementById("the-best");
     section.innerHTML = content;
 
-    const bestMovie = document.getElementById("best-movie");
     const openModal = document.getElementById("open-modal");
     const modal = document.getElementById("modal");
     const closeModal = document.getElementById("close-modal");
 
+
     openModal.addEventListener("click", function (event) {
       event.preventDefault();
       modal.classList.add("show");
-      bestMovie.classList.add("hide");
     });
 
     closeModal.addEventListener("click", function () {
       modal.classList.remove("show");
-      bestMovie.classList.remove("hide");
     });
 
   } catch (error) {
