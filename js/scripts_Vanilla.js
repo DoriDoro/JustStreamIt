@@ -1,5 +1,6 @@
 const homeUrl = "http://localhost:8000/api/v1/titles/"
 const bestMovie = "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score"
+const romance = "http://127.0.0.1:8000/api/v1/titles/?genre=romance"
 
 async function getBestMovie(url) {
   try {
@@ -7,7 +8,7 @@ async function getBestMovie(url) {
     const jsonData = await response.json();
 
     const bestMovieId = jsonData.results[0].id;
-    const bestMovieUrl = `http://localhost:8000/api/v1/titles/${bestMovieId}`
+    const bestMovieUrl = `${homeUrl}${bestMovieId}`
 
     const movieDetailsResponse = await fetch(bestMovieUrl);
     const movieDetails = await movieDetailsResponse.json();
@@ -15,7 +16,7 @@ async function getBestMovie(url) {
     const content = `
       <div id="best-movie">
         <h2> The Best Movie </h2>
-        <div class="movie-container">
+        <div class="container">
           <img src=${movieDetails.image_url} alt=${movieDetails.title}>
           <div class="movie-content">
             <h3> ${movieDetails.title} (${movieDetails.imdb_score}/10)</h3>
@@ -29,7 +30,7 @@ async function getBestMovie(url) {
 
       <div id="modal" class="modal border">
          <h2> The Best Movie </h2>
-        <div class="movie-container">
+        <div class="container">
           <img src=${movieDetails.image_url} alt=${movieDetails.title}>
           <div class="movie-content">
             <h3> ${movieDetails.title} (${movieDetails.imdb_score}/10) </h3>
@@ -96,16 +97,72 @@ async function getBestMovie(url) {
   }
 }
 
-getBestMovie(bestMovie)
+async function carousel(url1) {
+  url2 = `${url1}&page=2`
 
+  try {
+    const response1 = await fetch(url1);
+    const jsonData1 = await response1.json();
 
-/*
-      <div id="modal-container">
-        <h2> The Best Movie - Details </h2>
-        <img src=${movieDetails.imageUrl} alt=${movieDetails.title}>
-        <div class="modal-content">
-          <h3> ${movieDetails.title} </h3>
-          <p>
+    const response2 = await fetch(url2);
+    const jsonData2 = await response2.json();
+
+    const carouselMovies1 = jsonData1.results;
+    const carouselMovies2 = jsonData2.results;
+    
+    movieDetails = [];
+    for (let i = 0; i < carouselMovies1.length; i++) {
+      id = carouselMovies1[i].id;
+      carouselUrl = `http://localhost:8000/api/v1/titles/${id}`
+      movieResponse = await fetch(carouselUrl);
+      details = await movieResponse.json();
+      movieDetails.push(details);
+    }
+
+    for (let i = 0; i < carouselMovies2.length; i++) {
+      id = carouselMovies2[i].id;
+      carouselUrl = `http://localhost:8000/api/v1/titles/${id}`
+      movieResponse = await fetch(carouselUrl);
+      details = await movieResponse.json();
+      movieDetails.push(details);
+    }
+    console.log(movieDetails)
+
+    let carouselImg = `
+      <div>
+        <h2> The Best Romance Movies </h2>
+        <div class="btn-right">
+          <button class="button"> Right </button>
         </div>
-      </div>  
-      */
+        <div class="container margin-left">
+    `;
+
+    for (let i = 0; i < 5; i++) {
+      carouselImg += `
+          <div>
+            <img src="${movieDetails[i].image_url}" alt="${movieDetails[i].title}">
+          </div>
+      `;
+    }
+
+    let button_left = `
+        </div>
+        <div class="btn-left">
+          <button class="button"> Left </button>
+        </div>
+      </div>
+    `;
+    
+    carouselImg += button_left;
+
+    let section = document.getElementById("romance");
+    section.innerHTML = carouselImg;
+
+  } catch (error) {
+    console.error(error);
+  }
+
+}
+
+carousel(romance)
+getBestMovie(bestMovie)

@@ -114,8 +114,15 @@ body
 }
 
 /*  -- modal best movie -- */
-.movie-container {
+.container {
     display: flex;
+    margin-left: 20px;
+}
+
+.container img {
+    border: solid 2px black;
+    border-radius: 3px;
+    margin-right: 20px;
 }
 
 .movie-content {
@@ -150,4 +157,21 @@ th, td {
 
 .show#modal {
     display: block;
+}
+
+
+.btn-right {
+    rotate: 90deg;
+    position: absolute;
+    margin: 120px -20px;
+}
+
+.btn-left {
+    rotate: -90deg;
+    position: absolute;
+    margin: -150px 1155px;
+}
+
+.margin-left {
+    margin-left: 100px;
 }
