@@ -1,7 +1,66 @@
 const homeUrl = "http://localhost:8000/api/v1/titles/"
-const bestMovie = "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score"
-const romance = "http://127.0.0.1:8000/api/v1/titles/?genre=romance"
 
+// "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score"
+// "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&page=2"
+
+// "http://127.0.0.1:8000/api/v1/titles/?genre=romance"
+// "http://127.0.0.1:8000/api/v1/titles/?genre=romance&page=2"
+
+// "http://127.0.0.1:8000/api/v1/titles/?genre=${}"
+
+const categories = ["best-movie", "romance", "drama", "history"];
+
+
+// generate the urls:
+async function createUrls(category) {
+  let url;
+
+  if (category == "best-movie"){
+    url = `${homeUrl}?sort_by=-imdb_score`
+  }
+  else{
+    url = `${homeUrl}?genre=${category}`
+  }
+
+  return url;
+}
+
+async function getAllData(category) {
+  const url = await createUrls(category);
+  const url2 = `${url}&page=2`;
+  const urlsList = [url, url2];
+
+  categoryData = [];
+  for (let i = 0; i < urlsList.length; i++) {
+    try {
+      const response = await fetch(urlsList[i]);
+      const jsonData = await response.json();
+
+      categoryData.push(jsonData);
+    } catch (error) {
+    console.error(error);
+    }
+  }
+
+  const combinedDataArray = await combineData(categoryData);
+
+  return combinedDataArray;
+}
+
+
+async function combineData(data) {
+  combinedDataArray = [];
+  for (let i = 0; i < data.length; i++) {
+    combinedDataArray.push(data[i].results)
+  }
+
+  return combinedDataArray;
+}
+
+
+getAllData(categories[3]);
+
+/*
 async function getBestMovie(url) {
   try {
     const response = await fetch(url);
@@ -109,28 +168,12 @@ async function carousel(url1) {
 
     const carouselMovies1 = jsonData1.results;
     const carouselMovies2 = jsonData2.results;
-    
-    movieDetails = [];
-    for (let i = 0; i < carouselMovies1.length; i++) {
-      id = carouselMovies1[i].id;
-      carouselUrl = `http://localhost:8000/api/v1/titles/${id}`
-      movieResponse = await fetch(carouselUrl);
-      details = await movieResponse.json();
-      movieDetails.push(details);
-    }
 
-    for (let i = 0; i < carouselMovies2.length; i++) {
-      id = carouselMovies2[i].id;
-      carouselUrl = `http://localhost:8000/api/v1/titles/${id}`
-      movieResponse = await fetch(carouselUrl);
-      details = await movieResponse.json();
-      movieDetails.push(details);
-    }
-    console.log(movieDetails)
+    console.log(jsonData2)
 
     let carouselImg = `
       <div>
-        <h2> The Best Romance Movies </h2>
+        <h2> Romance Movies </h2>
         <div class="btn-right">
           <button class="button"> Right </button>
         </div>
@@ -140,7 +183,7 @@ async function carousel(url1) {
     for (let i = 0; i < 5; i++) {
       carouselImg += `
           <div>
-            <img src="${movieDetails[i].image_url}" alt="${movieDetails[i].title}">
+            <img src="${results[i].image_url}" alt="${[i].title}">
           </div>
       `;
     }
@@ -166,3 +209,4 @@ async function carousel(url1) {
 
 carousel(romance)
 getBestMovie(bestMovie)
+*/
