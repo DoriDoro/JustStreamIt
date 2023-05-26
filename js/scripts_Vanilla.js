@@ -1,55 +1,49 @@
 const homeUrl = "http://localhost:8000/api/v1/titles/"
-
-// "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score"
-// "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&page=2"
-
-// "http://127.0.0.1:8000/api/v1/titles/?genre=romance"
-// "http://127.0.0.1:8000/api/v1/titles/?genre=romance&page=2"
-
-// "http://127.0.0.1:8000/api/v1/titles/?genre=${}"
-
 const categories = ["best-movie", "romance", "drama", "history"];
-
 
 // generate the urls:
 async function createUrls(category) {
   let url;
 
-  if (category == "best-movie"){
+  if (category === "best-movie") {
     url = `${homeUrl}?sort_by=-imdb_score`
-  }
-  else{
+  } else {
     url = `${homeUrl}?genre=${category}`
   }
 
   return url;
 }
 
+// get all necessary data of two pages:
 async function getAllData(category) {
   const url = await createUrls(category);
   const url2 = `${url}&page=2`;
   const urlsList = [url, url2];
 
-  categoryData = [];
+  let categoryData = [];
   for (let i = 0; i < urlsList.length; i++) {
     try {
       const response = await fetch(urlsList[i]);
       const jsonData = await response.json();
 
       categoryData.push(jsonData);
+
     } catch (error) {
-    console.error(error);
+      console.error(error);
     }
   }
 
-  const combinedDataArray = await combineData(categoryData);
+  const resultCombinedDataArray = await combineData(categoryData);
 
-  return combinedDataArray;
+  // add the category to the array:
+  resultCombinedDataArray.push(category);
+
+  return resultCombinedDataArray;
 }
 
-
+// combine data of both pages into one array:
 async function combineData(data) {
-  combinedDataArray = [];
+  let combinedDataArray = [];
   for (let i = 0; i < data.length; i++) {
     combinedDataArray.push(data[i].results)
   }
@@ -57,8 +51,53 @@ async function combineData(data) {
   return combinedDataArray;
 }
 
+// create the first part: the best movie
+// create carousel
+// store url or id with img for the details
 
-getAllData(categories[3]);
+async function displayImgUrl(data) {
+  // get the category
+  const category = data[2];
+  // remove category out of the data array:
+  data.pop()
+
+  try {
+    if (category === "best-movie") {
+      console.log('the best movie');
+    } else {
+      for (let i = 0; i < data.length; i++) {
+        for (let j = 0; j < 5; j++) {
+          console.log('img', data[i][j].image_url);
+          
+        }
+        
+      }
+      /*
+      let imgContent = 
+          `
+          <div>
+              <img src="${data[i][j].image_url}" alt="${[i][j].title}">
+          </div>
+          `
+          */
+
+      console.log(data[0][0].image_url);
+    }
+    console.log('here', data);
+
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+
+async function main() {
+  const allData = await getAllData(categories[1]);
+  await displayImgUrl(allData);
+}
+
+
+main();
 
 /*
 async function getBestMovie(url) {
