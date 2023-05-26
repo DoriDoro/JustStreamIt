@@ -155,10 +155,9 @@ th, td {
 
 }
 
-.show#modal {
+.show {
     display: block;
 }
-
 
 .btn-right {
     rotate: 90deg;
