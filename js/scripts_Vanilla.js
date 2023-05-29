@@ -3,12 +3,15 @@ const categories = ["best-movies", "romance", "drama", "history"];
 const categoryTitle = ["The Best Movie", "Romance Movies", "Dramas", "History Movies"];
 
 
+// TODO: remove the first movie from best rated movies, twice
 // TODO: carousel movement
 // TODO: effects like when hovering over the image
+// TODO: category links in index.html
 
 // generate the urls:
 async function createUrls(category) {
-  let url;
+  try {
+    let url;
 
   if (category === "best-movies") {
     url = `${homeUrl}?sort_by=-imdb_score`
@@ -17,55 +20,68 @@ async function createUrls(category) {
   }
 
   return url;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 // get all necessary data of two pages:
 async function getAllData(category) {
-  const url = await createUrls(category);
-  const url2 = `${url}&page=2`;
-  const urlsList = [url, url2];
+  try {
+    const url = await createUrls(category);
+    const url2 = `${url}&page=2`;
+    const urlsList = [url, url2];
 
-  let categoryData = [];
-  for (let i = 0; i < urlsList.length; i++) {
-    try {
-      const response = await fetch(urlsList[i]);
-      const jsonData = await response.json();
+    let categoryData = [];
+    for (let i = 0; i < urlsList.length; i++) {
+      try {
+        const response = await fetch(urlsList[i]);
+        const jsonData = await response.json();
 
-      categoryData.push(jsonData);
+        categoryData.push(jsonData);
 
-    } catch (error) {
-      console.error(error);
+      } catch (error) {
+        console.error(error);
+      }
     }
+
+    const resultCombinedDataArray = await combineData(categoryData);
+
+    // add the category to the array:
+    resultCombinedDataArray.push(category);
+
+    return resultCombinedDataArray;
+  } catch(error) {
+    console.log(error);
   }
-
-  const resultCombinedDataArray = await combineData(categoryData);
-
-  // add the category to the array:
-  resultCombinedDataArray.push(category);
-
-  return resultCombinedDataArray;
 }
 
 // combine data of both pages into one array:
 async function combineData(data) {
-  let combinedDataArray = [];
-  for (let i = 0; i < data.length; i++) {
-    combinedDataArray.push(data[i].results)
-  }
+  try {
+    let combinedDataArray = [];
+    for (let i = 0; i < data.length; i++) {
+      combinedDataArray.push(data[i].results)
+    }
 
-  return combinedDataArray;
+    return combinedDataArray;
+  } catch(error) {
+    console.log(error);
+  }
 }
 
 // display Images on website:
 async function displayImgUrl(data, categoryTitle) {
-  // get the category
-  const category = data[2];
-  // remove category out of the data array:
-  data.pop()
-
   try {
+    // get the category
+    const category = data[2];
+    // remove category out of the data array:
+    data.pop()
+
     if (category === "best-movies") {
       const theBestMovieId = data[0][0].id;
+      const bestRatedMovieData = data[0].shift();
+
       categoryTitle2 = "Best Rated Movies";
 
       await theBestMovie(theBestMovieId, category, categoryTitle);
@@ -121,7 +137,11 @@ async function theBestMovie(id, category, categoryTitle) {
 async function carouselMovies(data, category, categoryTitle) {
   try {
     // shorten second array to 2 items, total 7:
-    data[1].splice(2);
+    if (category === "best-movies") {
+      data[1].splice(3);
+    } else {
+      data[1].splice(2);
+    }
 
     let carouselImgContent = `
       <div class="btn-right">
@@ -242,10 +262,14 @@ async function displayModal(url, category, categoryTitle) {
 
 // startpoint:
 async function main() {
-  for (let i = 0; i < 4; i++) {
+  try {
+    for (let i = 0; i < 4; i++) {
     const allData = await getAllData(categories[i]);
 
     await displayImgUrl(allData, categoryTitle[i]);
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 
