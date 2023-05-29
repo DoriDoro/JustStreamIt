@@ -116,10 +116,9 @@ body
 /*  -- modal best movie -- */
 .container {
     display: flex;
-    margin-left: 20px;
 }
 
-.container img {
+.image {
     border: solid 2px black;
     border-radius: 3px;
     margin-right: 20px;
@@ -146,11 +145,11 @@ th, td {
     border: solid 2px grey;
     border-radius: 5px;
     display: none;
-    margin-left: 15%;
-    margin-top: -375px;
+    top: 100px;
+    left: 250px;
     overflow: auto;
     position: fixed;
-    width: min-content;
+    width: 70%;
     z-index: 9999;
 
 }
@@ -173,4 +172,8 @@ th, td {
 
 .margin-left {
     margin-left: 100px;
+}
+
+.button-close {
+    margin-top: 10px;
 }

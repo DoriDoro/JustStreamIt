@@ -1,6 +1,6 @@
 const homeUrl = "http://localhost:8000/api/v1/titles/"
 const categories = ["best-movies", "romance", "drama", "history"];
-const categoryTitle = ["The Best Movie", "Best Rated Movies", "Romance Movies", "Dramas", "History Movies"];
+const categoryTitle = ["The Best Movie", "Romance Movies", "Dramas", "History Movies"];
 
 
 // generate the urls:
@@ -53,10 +53,7 @@ async function combineData(data) {
   return combinedDataArray;
 }
 
-// create the first part: the best movie
-// create carousel
-// store url or id with img for the details
-
+// display Images on website:
 async function displayImgUrl(data, categoryTitle) {
   // get the category
   const category = data[2];
@@ -66,10 +63,11 @@ async function displayImgUrl(data, categoryTitle) {
   try {
     if (category === "best-movies") {
       const theBestMovieId = data[0][0].id;
+      categoryTitle2 = "Best Rated Movies";
 
-      await theBestMovie(theBestMovieId);
+      await theBestMovie(theBestMovieId, category, categoryTitle);
 
-      await carouselMovies(data, category, categoryTitle);
+      await carouselMovies(data, category, categoryTitle2);
       
     } else {
       await carouselMovies(data, category, categoryTitle);
@@ -81,15 +79,13 @@ async function displayImgUrl(data, categoryTitle) {
 }
 
 // create the-best-movie section:
-async function theBestMovie(id) {
+async function theBestMovie(id, category, categoryTitle) {
   try {
     const theBestMovieUrl = `${homeUrl}${id}`
 
     const movieDetailsResponse = await fetch(theBestMovieUrl);
     const movieDetails = await movieDetailsResponse.json();
 
-    // issue class at modal, creates little quader when clicking on one 
-    // picture of Best Rated Movies
     const content = `
       <div class="container">
         <img src=${movieDetails.image_url} alt=${movieDetails.title}>
@@ -101,68 +97,16 @@ async function theBestMovie(id) {
       <div id="button">
         <button id="open-modal" class="open-button button"> Show Details </button>
       </div>
-
-      <div id="modal-best" class="modal border">
-         <h2> The Best Movie </h2>
-        <div class="container">
-          <img src=${movieDetails.image_url} alt=${movieDetails.title}>
-          <div class="movie-content">
-            <h3> ${movieDetails.title} (${movieDetails.imdb_score}/10) </h3>
-            <table>
-              <tr>
-                <th> Genre: </th>
-                <th> Country: </th>
-                <th> Published Date: </th>
-                <th> Vote: </th>
-                <th> Duration: </th>
-                <th> Budget: </th>
-              </tr>
-              <tr>
-                <td> ${movieDetails.genres} </td>
-                <td> ${movieDetails.countries} </td>
-                <td> ${movieDetails.date_published} </td>
-                <td> ${movieDetails.avg_vote} </td>
-                <td> ${movieDetails.duration} </td>
-                <td> ${movieDetails.budget} </td>
-              </tr>
-            </table>
-
-            <table id="second-table">
-              <tr>
-                <th> Director: </th>
-                <td> ${movieDetails.directors} </td>
-              </tr>
-              <tr>
-                <th> Actors: </th>
-                <td> ${movieDetails.actors} </td>
-              </tr>
-              <tr>
-                <th> Description: </th>
-                <td> ${movieDetails.long_description} </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div>
-          <button id="close-modal" class="close-button button"> Close </button>
-        </div>
-      </div>
-    `
+    `;
 
     let section = document.getElementById("the-best");
     section.innerHTML = content;
 
     const openModal = document.getElementById("open-modal");
-    const modalElement = document.getElementById("modal-best");
-    const closeModal = document.getElementById("close-modal");
 
     openModal.addEventListener("click", function (event) {
       event.preventDefault();
-      modalElement.classList.add("show");
-    });
-
-    closeModal.addEventListener("click", function () {
-      modalElement.classList.remove("show");
+      displayModal(theBestMovieUrl, category, categoryTitle);
     });
 
   } catch (error) {
@@ -180,14 +124,16 @@ async function carouselMovies(data, category, categoryTitle) {
       <div class="container margin-left">
     `;
 
+    let index = 1;
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < 5; j++) {
 
         carouselImgContent += `
-          <div id="${data[i][j].id}">
-            <img src="${data[i][j].image_url}" alt="${data[i][j].title}">
+          <div id="${data[i][j].id}-${index}">
+            <img class="image" src="${data[i][j].image_url}" alt="${data[i][j].title}">
           </div>
         `;
+        index += 1;
       }
     }
 
@@ -198,17 +144,20 @@ async function carouselMovies(data, category, categoryTitle) {
       </div>
     `;
 
-    let section = document.getElementById(`${category}`);
+    let section = document.getElementById(category);
     section.innerHTML = carouselImgContent;
 
+    index = 1;
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < 5; j++) {
-        const openModal = document.getElementById(`${data[i][j].id}`);
+
+        const openModal = document.getElementById(`${data[i][j].id}-${index}`);
 
         openModal.addEventListener("click", function (event) {
-        event.preventDefault();
-        displayModal(data[i][j].url, category, categoryTitle);
+          event.preventDefault();
+          displayModal(data[i][j].url, category, categoryTitle);
         });
+        index += 1;
       }
     }
   } catch (error) {
@@ -216,6 +165,7 @@ async function carouselMovies(data, category, categoryTitle) {
   }
 }
 
+// create modal:
 async function displayModal(url, category, categoryTitle) {
   try {
     const movieDetailsResponse = await fetch(url);
@@ -224,7 +174,9 @@ async function displayModal(url, category, categoryTitle) {
     modalContent = `
       <h2> ${categoryTitle} </h2>
       <div class="container">
-        <img src=${movieDetails.image_url} alt=${movieDetails.title}>
+        <div>
+          <img class="image" src=${movieDetails.image_url} alt=${movieDetails.title}>
+        </div>
         <div class="movie-content">
           <h3> ${movieDetails.title} (${movieDetails.imdb_score}/10) </h3>
           <table>
@@ -262,8 +214,8 @@ async function displayModal(url, category, categoryTitle) {
           </table>
         </div>
       </div>
-      <div>
-        <button id="close-modal" class="close-button button"> Close </button>
+      <div class="button-close">
+        <button id="close-modal-${category}" class="close-button button"> Close </button>
       </div>
     `;
 
@@ -271,9 +223,8 @@ async function displayModal(url, category, categoryTitle) {
     let modalElement = document.getElementById(`modal-${category}`);
     modalElement.innerHTML = modalContent;
     modalElement.classList.add("show");
-    console.log(modalElement);
 
-    const closeModal = document.getElementById("close-modal");
+    const closeModal = document.getElementById(`close-modal-${category}`);
 
     closeModal.addEventListener("click", function () {
       modalElement.classList.remove("show");
@@ -283,10 +234,13 @@ async function displayModal(url, category, categoryTitle) {
   }
 }
 
-
+// startpoint:
 async function main() {
-  const allData = await getAllData(categories[3]);
-  await displayImgUrl(allData, categoryTitle[1]);
+  for (let i = 0; i < 4; i++) {
+    const allData = await getAllData(categories[i]);
+
+    await displayImgUrl(allData, categoryTitle[i]);
+  }
 }
 
 
