@@ -3,6 +3,9 @@ const categories = ["best-movies", "romance", "drama", "history"];
 const categoryTitle = ["The Best Movie", "Romance Movies", "Dramas", "History Movies"];
 
 
+// TODO: carousel movement
+// TODO: effects like when hovering over the image
+
 // generate the urls:
 async function createUrls(category) {
   let url;
@@ -117,6 +120,9 @@ async function theBestMovie(id, category, categoryTitle) {
 // create carousel:
 async function carouselMovies(data, category, categoryTitle) {
   try {
+    // shorten second array to 2 items, total 7:
+    data[1].splice(2);
+
     let carouselImgContent = `
       <div class="btn-right">
         <button class="button"> Right </button>
@@ -126,7 +132,7 @@ async function carouselMovies(data, category, categoryTitle) {
 
     let index = 1;
     for (let i = 0; i < data.length; i++) {
-      for (let j = 0; j < 5; j++) {
+      for (let j = 0; j < data[i].length; j++) {
 
         carouselImgContent += `
           <div id="${data[i][j].id}-${index}">
@@ -149,7 +155,7 @@ async function carouselMovies(data, category, categoryTitle) {
 
     index = 1;
     for (let i = 0; i < data.length; i++) {
-      for (let j = 0; j < 5; j++) {
+      for (let j = 0; j < data[i].length; j++) {
 
         const openModal = document.getElementById(`${data[i][j].id}-${index}`);
 
