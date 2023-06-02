@@ -1,3 +1,4 @@
+// navbar modal display:
 // Wait for the document to load before executing the code
 $(document).ready(function() {
   // When hovering over the dropdown menu, show the modal

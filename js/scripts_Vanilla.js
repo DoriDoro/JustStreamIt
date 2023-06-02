@@ -3,10 +3,8 @@ const categories = ["best-movies", "romance", "drama", "history"];
 const categoryTitle = ["The Best Movie", "Romance Movies", "Dramas", "History Movies"];
 
 
-// TODO: remove the first movie from best rated movies, twice
 // TODO: carousel movement
 // TODO: effects like when hovering over the image
-// TODO: category links in index.html
 
 // generate the urls:
 async function createUrls(category) {
@@ -20,6 +18,7 @@ async function createUrls(category) {
   }
 
   return url;
+
   } catch (error) {
     console.error(error);
   }
@@ -51,6 +50,7 @@ async function getAllData(category) {
     resultCombinedDataArray.push(category);
 
     return resultCombinedDataArray;
+
   } catch(error) {
     console.log(error);
   }
@@ -113,7 +113,7 @@ async function theBestMovie(id, category, categoryTitle) {
           <p> ${movieDetails.description}</p>
         </div>
       </div>
-      <div id="button">
+      <div id="best-btn">
         <button id="open-modal" class="open-button button"> Show Details </button>
       </div>
     `;
@@ -143,32 +143,20 @@ async function carouselMovies(data, category, categoryTitle) {
       data[1].splice(2);
     }
 
-    let carouselImgContent = `
-      <div class="btn-right">
-        <button class="button"> Right </button>
-      </div>
-      <div class="container margin-left">
-    `;
+    let carouselImgContent = "";
 
     let index = 1;
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < data[i].length; j++) {
 
         carouselImgContent += `
-          <div id="${data[i][j].id}-${index}">
+          <li id="${data[i][j].id}-${index}">
             <img class="image" src="${data[i][j].image_url}" alt="${data[i][j].title}">
-          </div>
+          </li>
         `;
         index += 1;
       }
     }
-
-    carouselImgContent += `
-      </div>
-      <div class="btn-left">
-        <button class="button"> Left </button>
-      </div>
-    `;
 
     let section = document.getElementById(category);
     section.innerHTML = carouselImgContent;
@@ -260,6 +248,42 @@ async function displayModal(url, category, categoryTitle) {
   }
 }
 
+// carousel selection:
+async function playCarousel(category) {
+  try {
+    const carousel = document.querySelector(`[data-target="carousel-${category}"]`);
+    const image = carousel.querySelector(`[data-target='image-content-${category}']`);
+    const leftButton = document.querySelector(`[data-action='slideLeft-${category}']`);
+    const rightButton = document.querySelector(`[data-action='slideRight-${category}']`);
+
+    const imageWidth = 186;
+    const imageMarginRight = 20;
+
+    const imageCount = 7;
+
+    let offset = 0;
+    const maxX = -(((imageCount * imageWidth) + (imageCount - 1) * imageMarginRight) - ((imageWidth * 4) + imageMarginRight * 3));
+    // -648
+
+    leftButton.addEventListener("click", function() {
+      if (offset !== 0) {
+        offset += imageWidth + imageMarginRight;
+        carousel.style.transform = `translateX(${offset}px)`;
+      }
+    })
+
+    rightButton.addEventListener("click", function() {
+      if (offset !== maxX) {
+        offset -= imageWidth + imageMarginRight;
+        carousel.style.transform = `translateX(${offset}px)`;
+      }
+    })
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+
 // startpoint:
 async function main() {
   try {
@@ -267,6 +291,8 @@ async function main() {
     const allData = await getAllData(categories[i]);
 
     await displayImgUrl(allData, categoryTitle[i]);
+
+    await playCarousel(categories[i])
     }
   } catch (error) {
     console.error(error);
