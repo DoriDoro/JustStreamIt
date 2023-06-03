@@ -20,7 +20,7 @@ async function createUrls(category) {
   return url;
 
   } catch (error) {
-    console.error(error);
+    throw new Error("Failed to create URLs.");
   }
 }
 
@@ -33,15 +33,10 @@ async function getAllData(category) {
 
     let categoryData = [];
     for (let i = 0; i < urlsList.length; i++) {
-      try {
-        const response = await fetch(urlsList[i]);
-        const jsonData = await response.json();
+      const response = await fetch(urlsList[i]);
+      const jsonData = await response.json();
 
-        categoryData.push(jsonData);
-
-      } catch (error) {
-        console.error(error);
-      }
+      categoryData.push(jsonData);
     }
 
     const resultCombinedDataArray = await combineData(categoryData);
@@ -52,7 +47,7 @@ async function getAllData(category) {
     return resultCombinedDataArray;
 
   } catch(error) {
-    console.log(error);
+    throw new Error("Failed to get the data of the URLs.");
   }
 }
 
@@ -65,8 +60,9 @@ async function combineData(data) {
     }
 
     return combinedDataArray;
+
   } catch(error) {
-    console.log(error);
+    throw new Error("Failed to combine the data.");
   }
 }
 
@@ -93,7 +89,7 @@ async function displayImgUrl(data, categoryTitle) {
     }
 
   } catch(error) {
-    console.log(error);
+    throw new Error("Failed to display the image_url.");
   }
 }
 
@@ -129,7 +125,7 @@ async function theBestMovie(id, category, categoryTitle) {
     });
 
   } catch (error) {
-    console.error(error);
+    throw new Error("Failed to create the best movie section.");
   }
 }
 
@@ -175,7 +171,7 @@ async function carouselMovies(data, category, categoryTitle) {
       }
     }
   } catch (error) {
-    console.error(error);
+    throw new Error("Failed to create the carousel section.");
   }
 }
 
@@ -244,7 +240,7 @@ async function displayModal(url, category, categoryTitle) {
       modalElement.classList.remove("show");
     });
   } catch (error) {
-    console.error(error);
+    throw new Error("Failed to create the modal window.");
   }
 }
 
@@ -278,8 +274,9 @@ async function playCarousel(category) {
         carousel.style.transform = `translateX(${offset}px)`;
       }
     })
+
   } catch(error) {
-    console.log(error);
+    throw new Error("Failed to play the carousel.");
   }
 }
 
@@ -295,7 +292,7 @@ async function main() {
     await playCarousel(categories[i])
     }
   } catch (error) {
-    console.error(error);
+    throw new Error("Failed to get started.");
   }
 }
 
