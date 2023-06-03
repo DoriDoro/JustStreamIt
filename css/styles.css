@@ -118,6 +118,11 @@ body
     display: flex;
 }
 
+.container img {
+    border: solid 2px black;
+    border-radius: 3px;
+}
+
 .image {
     border: solid 2px black;
     border-radius: 3px;
@@ -167,7 +172,7 @@ th, td {
     margin-bottom: 80px;
 }
 .wrapper {
-    height: 310px;
+    height: 280px;
     margin: 0 auto;
     width: 805px;
     overflow: hidden;
@@ -192,11 +197,16 @@ th, td {
     padding: 0;
 }
 
+.carousel img:hover {
+    transform: scale(0.95);
+    border-radius: 10px;
+}
+
 .button-wrapper {
     display: flex;
     justify-content: space-between;
-    margin-left: 160px;
-    margin-right: 160px;
+    margin-left: 50px;
+    margin-right: 50px;
     margin-top: -200px;
 }
 
